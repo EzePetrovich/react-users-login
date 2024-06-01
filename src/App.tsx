@@ -1,14 +1,12 @@
-import '@src/styles/App.css';
+import '@src/styles/app.styles.scss';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from '@emotion/react';
-import {
-  Backdrop,
-  CircularProgress,
-  CssBaseline,
-  createTheme,
-} from '@mui/material';
+import { CssBaseline, createTheme } from '@mui/material';
 import { AppContext } from '@src/contexts/useAppContext';
-import Customers from '@src/pages/dashboard/Customers';
 import { useReducerApp } from '@src/hooks/useReducerApp';
+import { ScreenSpinner } from '@src/components/global/ScreenSpinner';
+import { SignIn } from '@src/pages/SignIn';
+import { SignUp } from '@src/pages/SignUp';
 
 function App() {
   const reducerApp = useReducerApp();
@@ -19,18 +17,28 @@ function App() {
     },
   });
 
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <></>,
+    },
+    {
+      path: '/signin',
+      element: <SignIn />,
+    },
+    {
+      path: '/signup',
+      element: <SignUp />,
+    },
+  ]);
+
   return (
     <AppContext.Provider value={reducerApp}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Customers />
+        <RouterProvider router={router} />
       </ThemeProvider>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={reducerApp.state.screenLoading}
-      >
-        <CircularProgress color='inherit' />
-      </Backdrop>
+      <ScreenSpinner open={reducerApp.state.screenLoading} />
     </AppContext.Provider>
   );
 }
